@@ -28,6 +28,14 @@ function! CountParens(line)
   return strlen(open) - strlen(close)
 endfunction
 
+function! CountAccols(line)
+  " first get rid of everything between ""
+  let line = substitute(a:line, '"\([^"]\|\\"\)*"', '', 'g')
+  let open = substitute(line, '[^{]', '', 'g')
+  let close = substitute(line, '[^}]', '', 'g')
+  return strlen(open) - strlen(close)
+endfunction
+
 function! GetScalaIndent()
   " Find a non-blank line above the current line.
   let lnum = prevnonblank(v:lnum - 1)
@@ -54,13 +62,18 @@ function! GetScalaIndent_(lnum)
   endif
 
   " Add a 'shiftwidth' after lines that start a block
-  if prevline =~ '{\s*$'
-    return ind + &shiftwidth
+  let a = CountAccols(prevline)
+  " echo c
+  if a > 0
+    let ind = ind + &shiftwidth
+"  elseif c < 0
+"    let ind = ind - &shiftwidth
   endif
+
   " If if, for or while end with ), this is a one-line block
   " If val, var, def end with =, this is a one-line block
   if prevline =~ '^\s*\<\(def\|va[lr]\)\>.*[=]\s*$'
-        \ || prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
+        \ || prevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>[^)]*[)=]\s*$'
         \ || prevline =~ '^\s*\<else\>\s*$'
     let ind = ind + &shiftwidth
   endif
@@ -78,7 +91,7 @@ function! GetScalaIndent_(lnum)
   " Dedent after if, for, while and val, var, def without block
   let pprevline = getline(prevnonblank(lnum - 1))
   if pprevline =~ '^\s*\<\(def\|va[lr]\)\>.*[=]\s*$'
-        \ || pprevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
+        \ || pprevline =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>[^)]*[)=]\s*$'
         \ || pprevline =~ '^\s*\<else\>\s*$'
     let ind = ind - &shiftwidth
     echom "prevline is a monoline block"
@@ -92,11 +105,12 @@ function! GetScalaIndent_(lnum)
   let thisline = getline(v:lnum)
 
   " for Autoclose with {{
-  if thisline =~ '^\s*}}' && prevline =~ '^\s*;\s*$'
+"  if thisline =~ '^\s*}}' && prevline =~ '^\s*;\s*$'
+"    echom "autoclose"
+"    return ind - &shiftwidth
+"  endif
+  if thisline =~ '^\s*}' && prevline =~ '{$'
     echom "autoclose"
-    return ind - &shiftwidth
-  endif
-  if thisline =~ '^\s*[})]' && prevline =~ '^\s*;\s*$'
     return ind
   endif
 
