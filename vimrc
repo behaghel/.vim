@@ -58,6 +58,27 @@ let $ADDED = '~/.vim/added/'
 "  let $ADDED = $VIM.'/added/'
 "endif
 
+fun ActivateAddons()
+  set runtimepath+=~/.vim-plugins/vim-addon-manager
+  try
+    call scriptmanager#Activate(['The_NERD_tree', 
+      \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
+      \ 'taglist', 'snipMate', 'lodgeit', 'pydoc910', 'Gist'])
+   ""   \ 'codefellow'
+  catch /.*/
+    echoe v:exception
+  endtry
+endf
+call ActivateAddons()
+
+"" Gist
+" -c will put it in clipboard
+let g:gist_clip_command = 'pbcopy'
+" detect filetype with Gist filename
+let g:gist_detect_filetype = 1
+" to open browser on the gist after creating it
+let g:gist_open_browser_after_post = 1
+
 " in order to be able to fold xml blocks
 let g:xml_syntax_folding = 1
 let xml_use_xhtml = 1
@@ -204,4 +225,3 @@ autocmd FileType scala set makeprg=sbt\ -n\ compile
 autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
        \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
        \%-G%.%#
-
