@@ -61,7 +61,7 @@ let $ADDED = '~/.vim/added/'
 fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
-    call scriptmanager#Activate(['The_NERD_tree', 
+    call scriptmanager#Activate(['The_NERD_tree', 'xmledit',
       \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
       \ 'taglist', 'snipMate', 'lodgeit', 'pydoc910', 'Gist'])
    ""   \ 'codefellow'
@@ -173,12 +173,12 @@ autocmd Filetype c set fo=croq
 
 autocmd FileType xml set foldmethod=syntax
 
-map <Leader>x :set filetype=xml<CR>
-  \:source $VIMRUNTIME/syntax/xml.vim<CR>
-  \:set foldmethod=syntax<CR>
-  \:source $VIMRUNTIME/syntax/syntax.vim<CR>
-  \:source $ADDED/xml.vim<CR>
-  \:echo "XML mode is on"<CR>
+" map <Leader>x :set filetype=xml<CR>
+"   \:source $VIMRUNTIME/syntax/xml.vim<CR>
+"   \:set foldmethod=syntax<CR>
+"   \:source $VIMRUNTIME/syntax/syntax.vim<CR>
+"   \:source $ADDED/xml.vim<CR>
+"   \:echo "XML mode is on"<CR>
 
 " catalog should be set up
 autocmd FileType xml nmap <Leader>l <Leader>cd:%w !xmllint --valid --noout -<CR>

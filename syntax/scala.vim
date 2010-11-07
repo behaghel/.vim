@@ -3,8 +3,6 @@ hi link scalaLineComment Comment
 " Language   : Scala (http://scala-lang.org/)
 " Maintainers: Stefan Matthias Aust, Julien Wetterwald
 " Last Change: 2007 June 13
-" Revision   : $Id$
-"        $URL$
 
 if version < 600
   syntax clear
@@ -94,10 +92,12 @@ syn match scalaNumber "\<\d\+\([eE][-+]\=\d\+\)\=[fFdD]\>"
 syn match scalaXmlTag "<[a-zA-Z]\_[^>]*/>" contains=scalaXmlQuote,scalaXmlEscape,scalaXmlString
 syn region scalaXmlString start="\"" end="\"" contained
 syn match scalaXmlStart "<[a-zA-Z]\_[^>]*>" contained contains=scalaXmlQuote,scalaXmlEscape,scalaXmlString
-syn region scalaXml matchgroup=scalaXmlStart start="<\([a-zA-Z]\_[^>]*\_[^/]\|[a-zA-Z]\)>" end="</\(\_[^>]\+\)>" contains=scalaXmlEscape,scalaXmlQuote,scalaXml,scalaXmlStart,scalaXmlComment
+syn region scalaXml matchgroup=scalaXmlStart start="<\([a-zA-Z]\_[^>]*\_[^/]\|[a-zA-Z]\)>" end="</\(\_[^>]\+\)>" contains=scalaXmlEscape,scalaXmlQuote,scalaXml,scalaXmlStart,scalaXmlComment fold
 syn region scalaXmlEscape matchgroup=scalaXmlEscapeSpecial start="{" matchgroup=scalaXmlEscapeSpecial end="}" contained contains=TOP
 syn match scalaXmlQuote "&[^;]\+;" contained
 syn match scalaXmlComment "<!--\_[^>]*-->" contained
+
+syn match scalaAnnotation "@[^ =:;()[]\+"
 
 syn sync fromstart
 
@@ -141,6 +141,7 @@ hi link scalaDefSpecializer Function
 hi link scalaClassName Special
 hi link scalaClassSpecializer Special
 hi link scalaConstructor Special
+hi link scalaAnnotation Special
 hi link scalaConstructorSpecializer scalaConstructor
 
 let b:current_syntax = "scala"
