@@ -44,9 +44,17 @@ function! GetScalaIndent()
   return ind
 endfunction
 
+function! IsDeclaration(line)
+  if a:line =~ '\(\<object\>\|\<class\>\|\<def\>\|\<val\>\|\<var\>\)'
+    return 1
+  else
+    return 0
+  endif
+endfunction
+
 function! IsUnfinishedStatement(line)
-  " line end with an operator
-  if a:line =~ '\s\+[=+&-:/*|<>!?%#]\+\s*$'
+  " line end with an operator or ; (eg for-clauses)
+  if a:line =~ '[-=+&:/*|<>!?%#;]\+\s*$'
     return 1
   endif
   return 0
@@ -62,10 +70,19 @@ function! IsOneLineBlockStart(line)
   return 0
 endfunction
 
-function! GetScalaIndent_(lnum)
-
+function! FindMatchingOpenBraceIndent(lnum)
   let lnum = a:lnum
+  let cumul = -1
+  while cumul != 0 && lnum > 0
+    let lnum = lnum - 1
+    let pline = getline(prevnonblank(lnum))
+    let cumul = cumul + CountAccols(pline)
+  endwhile
+  return indent(lnum)
+endfunction
 
+function! GetScalaIndent_(lnum)
+  let lnum = a:lnum
   " Hit the start of the file, use zero indent.
   if lnum == 0
     return 0
@@ -74,69 +91,14 @@ function! GetScalaIndent_(lnum)
   let ind = indent(lnum)
   let prevline = getline(lnum)
 
-  " Is prevline a terminated statement ?
-
-  " Indent html literals
-  if prevline !~ '/>\s*$' && prevline =~ '^\s*<[a-zA-Z][^>]*>\s*$'
-    echom "indenting XML literal"
-    return ind + &shiftwidth
-  endif
-  
-  " Previous line ends with an operator: indent
-  if IsUnfinishedStatement(prevline) > 0
-    " pprevline checked for cases where one line split in more than 2
-    if IsUnfinishedStatement(getline(prevnonblank(lnum - 1))) < 1
-      echom "continuing previous line"
-      return ind + &shiftwidth
-    else
-      return ind
-    endif
+  " prevline is a comment: same indent
+  if prevline =~ '^\s*//'
+    return ind
   endif
 
-  " Align 'for' clauses nicely
-  if prevline =~ '^\s*\<for\> (.*;\s*$'
-    echom "nicely indenting for clauses"
-    return ind - &shiftwidth + 5
-  endif
-
-  " prevline is a terminated statement
-  " does prevline start a new block ?
-
-  " If parenthesis are unbalanced, indent or dedent
-  let c = CountParens(prevline)
-  " echo c
-  if c > 0
-    let ind = ind + &shiftwidth
-    echom "continuing paren-content""
-  elseif c < 0
-    let ind = ind - &shiftwidth
-  endif
-
-  " Add a 'shiftwidth' after lines that start a block
-  let a = CountAccols(prevline)
-  " echo c
-  if a > 0
-    let ind = ind + &shiftwidth
-    echom "starting new block"
-  elseif c < 0
-    let ind = ind - &shiftwidth
-  endif
-
-  " if prevline does not start a block and is terminated
-  " should we dedent the next one ?
-  if a <= 0 && c <= 0 " a new block is not started by previous line
-    let pplnum = lnum - 1
-    let pprevline = getline(prevnonblank(pplnum))
-    echom pprevline
-    while IsOneLineBlockStart(pprevline) > 0
-          \ || IsUnfinishedStatement(pprevline) > 0
-       "   \ || IsUnfinishedStatement(pprevline) > 0
-       "   \ || IsUnfinishedStatement(pprevline) > 0
-      let ind = ind - &shiftwidth
-      echom "prevline is a monoline block"
-      let pplnum = pplnum - 1
-      let pprevline = getline(prevnonblank(pplnum))
-    endwhile
+  if prevline =~ '^\s*\*/\s*$'
+    echom "dedenting after multiline comment"
+    return ind - &shiftwidth
   endif
 
   let thisline = getline(v:lnum)
@@ -147,19 +109,130 @@ function! GetScalaIndent_(lnum)
     return ind - &shiftwidth
   endif
 
-  if CountAccols(thisline) == -a
-    return ind
+  " when yield is on its own line. indentkeys should contains =yield
+  if thisline =~ '^\s*yield'
+    echom "nicely indenting yield""
+    return ind - 3
   endif
-  if CountParens(thisline) == -c
+
+"  if CountAccols(thisline) == -a
+"    return ind
+"  endif
+"  if CountParens(thisline) == -c
+"    return ind
+"  endif
+
+  " Subtract a 'shiftwidth' on '}' or html
+  if thisline =~ '^\s*</'
+    echom "</..."
+    let ind = ind - &shiftwidth
+  endif
+
+  if thisline =~ '^\s*}\s*$'
+    let ind = FindMatchingOpenBraceIndent(lnum)
+    if prevline =~ '^\s*}\s*$'
+      " to tackle this strange behaviour that reindent the } after having it
+      " rightly dedent
+      let ind = ind - &shiftwidth
+    endif
     return ind
   endif
 
-  " Subtract a 'shiftwidth' on '}' or html
-  if thisline =~ '^\s*[})]'
-        \ || thisline =~ '^\s*</'
-    echom "), } or </..."
+  " prevline is only a }
+  if prevline =~ '^\s*}\s*$'
+    return ind
+  endif
+
+  " """"""""""""""""""""""""""""
+  " Is prevline a terminated statement ?
+
+  " Indent html literals
+  if prevline !~ '/>\s*$' && prevline =~ '^\s*<[a-zA-Z][^>]*>\s*$'
+    echom "indenting XML literal"
+    return ind + &shiftwidth
+  endif
+  
+  " Align 'for' clauses nicely
+  if prevline =~ '^\s*\<for\> (.*;\s*$'
+    echom "nicely indenting for clauses"
+    return ind + 5
+  endif
+  " when yield is on the same line as last for-clause
+  if prevline =~ 'yield\s*$'
+    echom "nicely indenting for clauses"
+    return ind - 3
+  endif
+ 
+  " Previous line ends with an operator: indent
+  if IsUnfinishedStatement(prevline) > 0
+    echom "unfinished statement:"
+    echom prevline
+    " pprevline checked for cases where one line split in more than 2
+    let pprevline = getline(lnum - 1)
+    if IsUnfinishedStatement(pprevline) < 1
+      echom "continuing previous line"
+      echom pprevline
+      return ind + &shiftwidth
+    else
+      return ind
+    endif
+  endif
+
+  " If parenthesis are unbalanced, indent or dedent
+  let c = CountParens(prevline)
+  " echo c
+  if c > 0
+    let ind = ind + &shiftwidth
+    echom "continuing paren-content"
+  elseif c < 0
+    echom "dedenting because of closed parens"
     let ind = ind - &shiftwidth
   endif
+
+  " Add a 'shiftwidth' after lines that start a block
+  let a = CountAccols(prevline)
+  " echo c
+  if a > 0
+    let ind = ind + &shiftwidth
+    echom "starting new block"
+  elseif a < 0
+    echom "dedenting because of closed braces"
+    let ind = ind - &shiftwidth
+  endif
+
+  " if previous line is a one line yield
+  if prevline =~ '^\s\+\<yield\>' && a == 0
+    echom "dedenting after monoline yield"
+    let ind = ind - &shiftwidth
+  endif
+
+  " if prevline does not start a block and is terminated
+  " should we dedent the next one ?
+  if a <= 0 && c <= 0 " a new block is not started by previous line
+    let pplnum = lnum 
+    let pprevline = prevline
+    let bstart = IsOneLineBlockStart(pprevline) 
+"     let bend = CountParens(pprevline)
+"     let unfinished =  IsUnfinishedStatement(pprevline)
+"     while bstart > 0 || unfinished > 0 || bend < 0
+    while bstart <= 0 && IsDeclaration(pprevline) <= 0 && strlen(substitute(pprevline,"\s+","","g")) > 0
+      echom pprevline
+      if bstart > 0
+        let ind = ind - &shiftwidth
+        echom "prevline is a monoline block"
+      endif
+      let pplnum = pplnum - 1
+      let pprevline = getline(pplnum)
+      let bstart = IsOneLineBlockStart(pprevline) 
+"       let bend = CountParens(pprevline)
+"       let unfinished =  IsUnfinishedStatement(pprevline)
+    endwhile
+    if bstart > 0
+      let ind = ind - &shiftwidth
+      echom "prevline is a monoline block"
+    endif
+  endif
+
 
   echom "standard indent"
   return ind
