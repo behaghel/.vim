@@ -54,14 +54,15 @@ endfunction
 
 function! IsUnfinishedStatement(line)
   " line end with an operator or ; (eg for-clauses)
-  if a:line =~ '[-=+&:/*|<>!?%#;]\+\s*$'
+  " but if only a ; on a line >> Autoclose vim addon. Exclude it
+  if a:line =~ '[-=+&:/*|<>!?%#;]\+\s*$' && a:line !~ '^\s*;\s*$'
     return 1
   endif
   return 0
 endfunction
 
 function! IsOneLineBlockStart(line)
-  if a:line =~ '^\s*\(\(\<implicit\>\|\<private\(\[\S\+\]\)\?\)\s\+\)\?\<\(def\|va[lr]\)\>.*[=]\s*$'
+  if a:line =~ '^\s*\(\(\<lazy\>\|\<implicit\>\|\<private\(\[\S\+\]\)\?\)\s\+\)\?\<\(def\|va[lr]\)\>.*[=]\s*$'
         \ || a:line =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>[^)]*[)=]\s*$'
         \ || a:line =~ '^\s*\<else\>\s*$'
         \ || a:line =~ '^\s*\<case\>.*=>\s*$'
@@ -74,8 +75,8 @@ function! FindMatchingOpenBraceIndent(lnum)
   let lnum = a:lnum
   let cumul = -1
   while cumul != 0 && lnum > 0
-    let lnum = lnum - 1
-    let pline = getline(prevnonblank(lnum))
+    let lnum = prevnonblank(lnum - 1)
+    let pline = getline(lnum)
     let cumul = cumul + CountAccols(pline)
   endwhile
   return indent(lnum)
@@ -104,10 +105,10 @@ function! GetScalaIndent_(lnum)
   let thisline = getline(v:lnum)
 
   " for Autoclose with {{
-  if thisline =~ '^\s*}}' && prevline =~ '^\s*;\s*$'
-    echom "autoclose"
-    return ind - &shiftwidth
-  endif
+"  if thisline =~ '^\s*}}' && prevline =~ '^\s*;\s*$'
+"    echom "autoclose"
+"    return ind - &shiftwidth
+"  endif
 
   " when yield is on its own line. indentkeys should contains =yield
   if thisline =~ '^\s*yield'
@@ -128,13 +129,25 @@ function! GetScalaIndent_(lnum)
     let ind = ind - &shiftwidth
   endif
 
+  if thisline =~ '^\s*}}\s*$' && prevline =~ '^\s*;\s*$'
+    echom "Autoclose end"
+    return ind - &shiftwidth
+  endif
+
   if thisline =~ '^\s*}\s*$'
-    let ind = FindMatchingOpenBraceIndent(lnum)
-    if prevline =~ '^\s*}\s*$'
-      " to tackle this strange behaviour that reindent the } after having it
-      " rightly dedent
-      let ind = ind - &shiftwidth
+    if prevline =~ '{\s*$'
+      echom "Autoclose body"
+      return ind + &shiftwidth
     endif
+    let ind = FindMatchingOpenBraceIndent(v:lnum)
+    echom "finding indent of matching open brace"
+    echom ind
+"    if prevline =~ '^\s*}\s*$'
+"      " to tackle this strange behaviour that reindent the } after having it
+"      " rightly dedent
+"      echom "dedent bug?"
+"      let ind = ind - &shiftwidth
+"    endif
     return ind
   endif
 
