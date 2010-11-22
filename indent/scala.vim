@@ -63,7 +63,7 @@ endfunction
 
 function! IsOneLineBlockStart(line)
   if a:line =~ '^\s*\(\(\<lazy\>\|\<implicit\>\|\<private\(\[\S\+\]\)\?\)\s\+\)\?\<\(def\|va[lr]\)\>.*[=]\s*$'
-        \ || a:line =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>[^)]*[)=]\s*$'
+        \ || a:line =~ '^\s*\<\(\(else\s\+\)\?if\|for\|while\)\>.*[)=]\s*$'
         \ || a:line =~ '^\s*\<else\>\s*$'
         \ || a:line =~ '^\s*\<case\>.*=>\s*$'
     return 1
@@ -189,6 +189,11 @@ function! GetScalaIndent_(lnum)
     else
       return ind
     endif
+  endif
+
+  if IsOneLineBlockStart(prevline) > 0
+    echom "prevline is one-line-block start"
+    return ind + &shiftwidth
   endif
 
   " If parenthesis are unbalanced, indent or dedent
