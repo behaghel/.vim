@@ -3,7 +3,9 @@ filetype on
 filetype indent on
 filetype plugin on
 "set statusline=%<%f\%h%m%r%=%-20.(line=%l\ \ col=%c%V\ \ totlin=%L%)\ \ \%h%m%r%=%-40(bytval=0x%B,%n%Y%)\%P
-set statusline=-%n-%h%m%r%f\ %<%=%(col=%c%V\ \ line=%l\ \ totlin=%L%)\ %-Y\ %P
+" with CWD
+"set statusline=[%n]%h%m%r%f\ \ cwd:\ %r%{getcwd()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
+set statusline=[%n]%h%m%r%f\ \ %h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
 
 
 "" General options
@@ -19,17 +21,18 @@ set directory=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
 set autowrite
 set hlsearch
 set incsearch
+set magic
 set ignorecase
 set smartcase         " noignorecase when capital in the search pattern
 set history=100
-set scrolloff=3       " context around cursor when reaching top/bottom
+set scrolloff=7       " context around cursor when reaching top/bottom
 set laststatus=2      " show status line?  Yes, always!
 set showmatch         " Show the matching bracket for the last ')'?
 set showcmd           " Show current uncompleted command?  Absolutely!
 set showmode          " Show the current mode?  YEEEEEEEEESSSSSSSSSSS!
 set suffixes=.bak,.swp,.o,~,.class,.exe,.obj
                         " Suffixes to ignore in file completion
-set title             " Permet de voir le tit. du doc. crt. ds les XTERM
+set title             " have your term title showing what you do
 set noerrorbells      " damn this beep!  ;-)
 set visualbell
 set smartindent
@@ -61,8 +64,11 @@ let $ADDED = '~/.vim/added/'
 fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
-    call scriptmanager#Activate(['The_NERD_tree', 'xmledit',
+    call scriptmanager#Activate(['The_NERD_tree', 'xmledit', 
+      \ 'Command-T',
       \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
+      \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
+      \ 'tpope-markdown', 'scalacommenter', 'ensime',
       \ 'taglist', 'snipMate', 'lodgeit', 'pydoc910', 'Gist'])
    ""   \ 'codefellow'
   catch /.*/
@@ -78,19 +84,25 @@ let g:gist_clip_command = 'pbcopy'
 let g:gist_detect_filetype = 1
 " to open browser on the gist after creating it
 let g:gist_open_browser_after_post = 1
-
+" snipMate
+let g:snippets_dir = '~/.vim-plugins/snipMate/snippets,~/.vim/snippets'
+let g:snips_author = 'Hubert Behaghel'
 " in order to be able to fold xml blocks
 let g:xml_syntax_folding = 1
 let xml_use_xhtml = 1
 let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib$', '^lib_managed$', '^target$']
-" guess what : I don't know what you do...
-map <Leader>cd :exe 'cd ' . expand ("%:p:h")<CR>
+" CommandT options
+let g:CommandTMaxHeight = 15
+" vim-addon-async
+let g:vimcmd='mvim' " only my MacVim install has +clientserver
 
 """"""""""""""""""
 " general mapping
  
 " My mac can't make Ctrl-] work out f the box :-(
-map  <C-]>
+if has("macunix")
+  map  <C-]>
+endif
 " reformat paragraphs
 imap <C-J> <C-O>gqap
 nmap <C-J>      gqap
@@ -98,10 +110,6 @@ vmap <C-J>      gq
 " to have Ctrl-Spce triggering omnicomplete
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
-" make
-map <F9> :make
-" ctags
-map <F10> :! ctags -R *
 " tabs
 "map <A-Right> :tabnext<CR>
 map [5C :tabnext<CR>
@@ -111,7 +119,59 @@ map <C-n> :tabnew<CR>
 map <C-e> :tabe
 map <F2> :TlistToggle<CR>
 map <F3> :NERDTreeToggle<CR>
+map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+map <F9> :make
+map <F10> :! ctags -R *
 map <C-p> :Lodgeit<CR>
+
+" When pressing <leader>cd switch to the directory of the open buffer
+map <leader>cd :cd %:p:h<cr>
+
+""""""""""""""""""""""""""""""
+" => Visual mode related
+""""""""""""""""""""""""""""""
+"  In visual mode when you press * or # to search for the current selection
+vnoremap <silent> * :call VisualSearch('f')<CR>
+vnoremap <silent> # :call VisualSearch('b')<CR>
+
+" When you press gv you vimgrep after the selected text
+vnoremap <silent> gv :call VisualSearch('gv')<CR>
+map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+
+
+function! CmdLine(str)
+    exe "menu Foo.Bar :" . a:str
+    emenu Foo.Bar
+    unmenu Foo
+endfunction
+
+" From an idea by Michael Naumann
+function! VisualSearch(direction) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("vimgrep " . '/'. l:pattern . '/' . ' **/*.')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => QuickFix
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Do :help cope if you are unsure what cope is. It's super useful!
+map <leader>cc :botright cope<cr>
+map <leader>n :cn<cr>
+map <leader>p :cp<cr>
 
 """"""""""""""""""
 "" Editing a mail
@@ -130,7 +190,7 @@ autocmd FileType tex imap <C-F7> <C-O><F7>
 autocmd FileType tex map <F8> :s/^\s*%*//
 autocmd FileType tex imap <C-F8> <C-O><F8>
 
-autocmd FileType tex set makeprg=latex
+autocmd FileType tex set makeprg=pdflatex
 autocmd FileType tex map <F9> :make %
 " to be improved
 "autocmd FileType tex map <F10> :! xdvi %
@@ -138,13 +198,15 @@ autocmd FileType tex map <F9> :make %
 
 " emph, it, bf, sc
 
-
 """"""""""""""""""
 " " Editing HTML
 au BufNewFile *.html r ~/.vim/modele.html
 " Comments
 autocmd Filetype html map <F8> :s/\(.*\)/<!--\1-->/
 autocmd Filetype html imap <F8> <C-O><C-F8>
+""""""""""""""""""
+" " Editing CSS
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 """""""""""""""""""
 " " Editing C
@@ -222,6 +284,31 @@ autocmd FileType python map <F12> :! python %<CR>
 let tlist_scala_settings = "scala;c:Class;t:Trait;m:Method;o:Object;r:Definition"
 " snippets from : http://github.com/tommorris/scala-vim-snippets
 autocmd FileType scala set makeprg=sbt\ -n\ compile
-autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
-       \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
-       \%-G%.%#
+autocmd FileType scala let current_compiler = "sbt"
+autocmd FileType scala set errorformat=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
+               \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
+               \%-G%.%#
+autocmd FileType scala set errorformat=%E[error]\ %f:%l:\ %m,%C[error]\ %p^,%-C%.%#,%Z,
+               \%W[warn]\ %f:%l:\ %m,%C[warn]\ %p^,%-C%.%#,%Z,
+               \%-G%.%#
+autocmd FileType scala set errorfile=target/error
+" scalacommenter plugin
+autocmd FileType scala source $HOME/.vim-plugins/scalacommenter/plugin/scalacommenter.vim 
+autocmd FileType scala map <Leader>cw :call ScalaCommentWriter()<CR> 
+autocmd FileType scala map <Leader>cf :call ScalaCommentFormatter()<CR> 
+autocmd FileType scala let b:scommenter_class_author='Hubert Behaghel' 
+autocmd FileType scala let b:scommenter_file_author='Hubert Behaghel' 
+autocmd FileType scala let b:scommenter_extra_line_text_offset = 20 
+"autocmd FileType scala let g:scommenter_file_copyright_list = [ 
+"  \    'COPYRIGHT', 
+"  \    'Second line of copyright', 
+"  \    'And a third line' 
+"  \] 
+"autocmd FileType scala let b:scommenter_user_tags = [ 
+"  \["pre", 0, 1, 0], 
+"  \["post", 0, 1, 0], 
+"  \["requires", 1, 1, 0], 
+"  \["provides", 0, 1, 0] 
+"  \] 
+autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
+autocmd FileType scala map <Leader>se :Ensime<cr>
