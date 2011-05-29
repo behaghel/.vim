@@ -75,7 +75,7 @@ fun ActivateAddons()
       \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'tpope-markdown', 'scalacommenter', 'ensime',
-      \ 'gitv',
+      \ 'gitv', 'fugitive', 'git.zip',
       \ 'taglist', 'snipMate', 'lodgeit', 'pydoc910', 'Gist'])
    ""   \ 'codefellow'
   catch /.*/
