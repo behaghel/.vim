@@ -10,7 +10,7 @@ set statusline=[%n]%h%m%r%f\ \ %h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
 
 "" General options
 syntax on
-set bg=light
+set bg=dark
 set number
 set whichwrap=h,l,<,> " which key let you go to previous/next line
 set wildmenu
@@ -35,7 +35,6 @@ set suffixes=.bak,.swp,.o,~,.class,.exe,.obj
 set title             " have your term title showing what you do
 set noerrorbells      " damn this beep!  ;-)
 set visualbell
-set smartindent
 set expandtab
 set sw=2
 set ts=2
@@ -46,6 +45,13 @@ nnoremap ` '
 set modeline
 set encoding=utf-8
 set foldlevelstart=99
+" Tell vim to remember certain things when we exit
+"  '10  :  marks will be remembered for up to 10 previously edited files
+"  "100 :  will save up to 100 lines for each register
+"  :20  :  up to 20 lines of command-line history will be remembered
+"  %    :  saves and restores the buffer list
+"  n... :  where to save the viminfo files
+set viminfo='10,\"100,:20,%,n~/.viminfo
 
 if (&shell=="/bin/zsh")
   set shell=/bin/bash
@@ -64,8 +70,8 @@ let $ADDED = '~/.vim/added/'
 fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
-    call scriptmanager#Activate(['The_NERD_tree', 'xmledit', 
-      \ 'Command-T',
+    call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
+      \ 'Command-T', "ZenCoding",
       \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'tpope-markdown', 'scalacommenter', 'ensime',
@@ -172,6 +178,19 @@ endfunction
 map <leader>cc :botright cope<cr>
 map <leader>n :cn<cr>
 map <leader>p :cp<cr>
+
+"" Restore cursor position
+function! ResCur()
+  if line("'\"") <= line("$")
+    normal! g`"
+    return 1
+  endif
+endfunction
+
+augroup resCur
+  autocmd!
+  autocmd BufWinEnter * call ResCur()
+augroup END
 
 """"""""""""""""""
 "" Editing a mail
@@ -285,12 +304,10 @@ let tlist_scala_settings = "scala;c:Class;t:Trait;m:Method;o:Object;r:Definition
 " snippets from : http://github.com/tommorris/scala-vim-snippets
 autocmd FileType scala set makeprg=sbt\ -n\ compile
 autocmd FileType scala let current_compiler = "sbt"
-autocmd FileType scala set errorformat=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
-               \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
-               \%-G%.%#
-autocmd FileType scala set errorformat=%E[error]\ %f:%l:\ %m,%C[error]\ %p^,%-C%.%#,%Z,
-               \%W[warn]\ %f:%l:\ %m,%C[warn]\ %p^,%-C%.%#,%Z,
-               \%-G%.%#
+autocmd FileType scala set makeprg=sbt\ compile
+autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
+       \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
+       \%-G%.%#
 autocmd FileType scala set errorfile=target/error
 " scalacommenter plugin
 autocmd FileType scala source $HOME/.vim-plugins/scalacommenter/plugin/scalacommenter.vim 
