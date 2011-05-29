@@ -5,7 +5,7 @@ filetype plugin on
 "set statusline=%<%f\%h%m%r%=%-20.(line=%l\ \ col=%c%V\ \ totlin=%L%)\ \ \%h%m%r%=%-40(bytval=0x%B,%n%Y%)\%P
 " with CWD
 "set statusline=[%n]%h%m%r%f\ \ cwd:\ %r%{getcwd()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
-set statusline=[%n]%h%m%r%f\ \ %h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
+set statusline=[%n]%h%m%r%f\ \ %{fugitive#statusline()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
 
 
 "" General options
@@ -71,10 +71,11 @@ fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
     call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
-      \ 'Command-T', "ZenCoding",
+      \ 'Command-T', "ZenCoding", "The_NERD_Commenter",
       \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'tpope-markdown', 'scalacommenter', 'ensime',
+      \ 'gitv',
       \ 'taglist', 'snipMate', 'lodgeit', 'pydoc910', 'Gist'])
    ""   \ 'codefellow'
   catch /.*/
@@ -175,7 +176,7 @@ endfunction
 " => QuickFix
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Do :help cope if you are unsure what cope is. It's super useful!
-map <leader>cc :botright cope<cr>
+map <leader>ce :botright cope<cr>
 map <leader>n :cn<cr>
 map <leader>p :cp<cr>
 
