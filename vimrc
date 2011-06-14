@@ -330,4 +330,3 @@ autocmd FileType scala let b:scommenter_extra_line_text_offset = 20
 "  \] 
 autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
 autocmd FileType scala map <Leader>se :Ensime<cr>
-
