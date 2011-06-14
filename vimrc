@@ -72,7 +72,7 @@ fun ActivateAddons()
   try
     call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
       \ 'Command-T', "ZenCoding", "The_NERD_Commenter",
-      \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 
+      \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 'unimpaired',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'tpope-markdown', 'scalacommenter', 'ensime',
       \ 'gitv', 'fugitive', 'git.zip',
@@ -330,3 +330,4 @@ autocmd FileType scala let b:scommenter_extra_line_text_offset = 20
 "  \] 
 autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
 autocmd FileType scala map <Leader>se :Ensime<cr>
+
