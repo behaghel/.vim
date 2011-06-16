@@ -102,6 +102,7 @@ let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib$', '^lib_manage
 let g:CommandTMaxHeight = 15
 " vim-addon-async
 let g:vimcmd='mvim' " only my MacVim install has +clientserver
+let g:async={ 'vim': 'mvim' }
 
 """"""""""""""""""
 " general mapping
