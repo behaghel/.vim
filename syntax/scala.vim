@@ -37,6 +37,7 @@ syn keyword scalaVar var nextgroup=scalaVarName skipwhite
 syn keyword scalaClass class nextgroup=scalaClassName skipwhite
 syn keyword scalaObject object nextgroup=scalaClassName skipwhite
 syn keyword scalaTrait trait nextgroup=scalaClassName skipwhite
+syn keyword scalaWith with nextgroup=scalaClassName skipwhite
 syn match scalaDefName "[^ =:;([]\+" contained nextgroup=scalaDefSpecializer skipwhite
 syn match scalaValName "[^ =:;([]\+" contained
 syn match scalaVarName "[^ =:;([]\+" contained 
@@ -136,11 +137,12 @@ hi link scalaVal Keyword
 hi link scalaClass Keyword
 hi link scalaObject Keyword
 hi link scalaTrait Keyword
+hi link scalaWith Keyword
 hi link scalaDefName Function
 hi link scalaDefSpecializer Function
-hi link scalaClassName Special
-hi link scalaClassSpecializer Special
-hi link scalaConstructor Special
+hi link scalaClassName Type
+hi link scalaClassSpecializer Type
+hi link scalaConstructor Type
 hi link scalaAnnotation Special
 hi link scalaConstructorSpecializer scalaConstructor
 

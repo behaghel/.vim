@@ -44,6 +44,8 @@ nnoremap ' `
 nnoremap ` '
 set modeline
 set encoding=utf-8
+" use set invlist to view non-pintable characters
+set lcs=eol:¬,trail:·,precedes:↪,nbsp:↮,extends:⇉,tab:↹↹
 set foldlevelstart=99
 " Tell vim to remember certain things when we exit
 "  '10  :  marks will be remembered for up to 10 previously edited files
@@ -71,7 +73,7 @@ fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
     call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
-      \ 'Command-T', "ZenCoding", "The_NERD_Commenter",
+      \ 'Command-T', "ZenCoding", "The_NERD_Commenter", "Solarized",
       \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 'unimpaired',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'tpope-markdown', 'scalacommenter', 'ensime',
