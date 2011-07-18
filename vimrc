@@ -73,13 +73,14 @@ fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
     call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
-      \ 'Command-T', "ZenCoding", "The_NERD_Commenter", "Solarized",
-      \ 'AutoClose1849', 'matchit.zip', 'repeat', 'surround', 'unimpaired',
+      \ 'Command-T', "The_NERD_Commenter", "Solarized",
+      \ 'repeat', 'surround', 'unimpaired',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'tpope-markdown', 'scalacommenter', 'ensime',
-      \ 'gitv', 'fugitive', 'git.zip',
-      \ 'taglist', 'snipMate', 'lodgeit', 'pydoc910', 'Gist'])
-   ""   \ 'codefellow'
+      \ 'ZenCoding', 'AutoClose1849', 'matchit.zip', 
+      \ 'taglist', 'lodgeit', 'Gist',
+      \ 'tpope-markdown', 'ensime', 'snipMate', 
+      \ 'gitv', 'fugitive', 'git.zip'])
+   ""   \ 'codefellow', 'scalacommenter', 'pydoc910', 
   catch /.*/
     echoe v:exception
   endtry
@@ -103,8 +104,10 @@ let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib$', '^lib_manage
 " CommandT options
 let g:CommandTMaxHeight = 15
 " vim-addon-async
-let g:vimcmd='mvim' " only my MacVim install has +clientserver
-let g:async={ 'vim': 'mvim' }
+if has("macunix")
+  let g:vimcmd='mvim' " only my MacVim install has +clientserver
+  let g:async={ 'vim': 'mvim' }
+endif
 
 """"""""""""""""""
 " general mapping
@@ -117,6 +120,8 @@ endif
 imap <C-J> <C-O>gqap
 nmap <C-J>      gqap
 vmap <C-J>      gq
+" easy switch between current and previously edited buffer
+nmap <C-Tab> :b#<CR>
 " to have Ctrl-Spce triggering omnicomplete
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
@@ -314,12 +319,12 @@ autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%
        \%-G%.%#
 autocmd FileType scala set errorfile=target/error
 " scalacommenter plugin
-autocmd FileType scala source $HOME/.vim-plugins/scalacommenter/plugin/scalacommenter.vim 
-autocmd FileType scala map <Leader>cw :call ScalaCommentWriter()<CR> 
-autocmd FileType scala map <Leader>cf :call ScalaCommentFormatter()<CR> 
-autocmd FileType scala let b:scommenter_class_author='Hubert Behaghel' 
-autocmd FileType scala let b:scommenter_file_author='Hubert Behaghel' 
-autocmd FileType scala let b:scommenter_extra_line_text_offset = 20 
+"autocmd FileType scala source $HOME/.vim-plugins/scalacommenter/plugin/scalacommenter.vim 
+"autocmd FileType scala map <Leader>cw :call ScalaCommentWriter()<CR> 
+"autocmd FileType scala map <Leader>cf :call ScalaCommentFormatter()<CR> 
+"autocmd FileType scala let b:scommenter_class_author='Hubert Behaghel' 
+"autocmd FileType scala let b:scommenter_file_author='Hubert Behaghel' 
+"autocmd FileType scala let b:scommenter_extra_line_text_offset = 20 
 "autocmd FileType scala let g:scommenter_file_copyright_list = [ 
 "  \    'COPYRIGHT', 
 "  \    'Second line of copyright', 
@@ -331,5 +336,6 @@ autocmd FileType scala let b:scommenter_extra_line_text_offset = 20
 "  \["requires", 1, 1, 0], 
 "  \["provides", 0, 1, 0] 
 "  \] 
+" Ensime for vim!
 autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
 autocmd FileType scala map <Leader>se :Ensime<cr>

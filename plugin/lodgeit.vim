@@ -1,1 +1,0 @@
-/Users/hub/.vim-plugins/lodgeit/lodgeit.vim
