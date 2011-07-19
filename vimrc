@@ -14,6 +14,7 @@ set bg=dark
 set number
 set whichwrap=h,l,<,> " which key let you go to previous/next line
 set wildmenu
+set lazyredraw  " smoother looking plugins
 set hidden
 set backup
 set backupdir=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
