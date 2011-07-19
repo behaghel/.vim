@@ -14,7 +14,6 @@ set bg=dark
 set number
 set whichwrap=h,l,<,> " which key let you go to previous/next line
 set wildmenu
-set lazyredraw  " smoother looking plugins
 set hidden
 set backup
 set backupdir=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
@@ -340,3 +339,7 @@ autocmd FileType scala set errorfile=target/error
 " Ensime for vim!
 autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
 autocmd FileType scala map <Leader>se :Ensime<cr>
+
+" activate lazyredraw at the latest time, 
+" otherwise on startup it prevents the buffer to be rendered.
+set lazyredraw  " smoother looking plugins
