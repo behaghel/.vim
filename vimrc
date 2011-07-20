@@ -9,8 +9,8 @@ set statusline=[%n]%h%m%r%f\ \ %{fugitive#statusline()}%h%<%=%(pos=%l/%L:%c%V%)\
 
 
 "" General options
-syntax on
 set bg=dark
+syntax on
 set number
 set whichwrap=h,l,<,> " which key let you go to previous/next line
 set wildmenu
@@ -32,6 +32,7 @@ set showcmd           " Show current uncompleted command?  Absolutely!
 set showmode          " Show the current mode?  YEEEEEEEEESSSSSSSSSSS!
 set suffixes=.bak,.swp,.o,~,.class,.exe,.obj
                         " Suffixes to ignore in file completion
+set wildignore+=*.bak,*.swp,*.o,*~,*.class,*.exe,*.obj,.git,.svn,target
 set title             " have your term title showing what you do
 set noerrorbells      " damn this beep!  ;-)
 set visualbell
@@ -69,6 +70,9 @@ let $ADDED = '~/.vim/added/'
 "  let $ADDED = $VIM.'/added/'
 "endif
 
+" """""""""""""""""""""""
+" Addons 
+" """""""""""""""""""""""
 fun ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
@@ -109,12 +113,21 @@ if has("macunix")
   let g:async={ 'vim': 'mvim' }
 endif
 
-""""""""""""""""""
+" addons shortcuts
+map <C-p> :Lodgeit<CR>
+map <F2> :TlistToggle<CR>
+map <F3> :NERDTreeToggle<CR>
+
+
+" """""""""""""""""""""""
 " general mapping
+" """""""""""""""""""""""
  
 " My mac can't make Ctrl-] work out f the box :-(
 if has("macunix")
   map  <C-]>
+  map [5C :tabnext<CR>
+  map [5D :tabprevious<CR>
 endif
 " reformat paragraphs
 imap <C-J> <C-O>gqap
@@ -125,34 +138,35 @@ nmap <C-Tab> :b#<CR>
 " to have Ctrl-Spce triggering omnicomplete
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
-" tabs
-"map <A-Right> :tabnext<CR>
-map [5C :tabnext<CR>
-"map <A-Left> :tabprevious<CR>
-map [5D :tabprevious<CR>
-map <C-n> :tabnew<CR>
+" => tabs
+map <A-Right> :tabnext<CR>
+map <A-Left> :tabprevious<CR>
+" inside konsole, if you want automatic t_Co setting, 
+" you need to have $TERM == konsole-256color
+" but the input config by default does not give you usual behaviour
+" so you need to hardcode it...
+" $TERM == linux give the right behaviour but you then have to hardcode
+" t_Co...
+if &term =~ "konsole-256color"
+  map [1;5C :tabnext<CR>
+  map [1;5D : tabprevious<CR>
+endif
+map <C-n> :tabnew<CR> " <C-t> is for jump to previous tag (ctags)
 map <C-e> :tabe
-map <F2> :TlistToggle<CR>
-map <F3> :NERDTreeToggle<CR>
-map <F4> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
-map <F9> :make
-map <F10> :! ctags -R *
-map <C-p> :Lodgeit<CR>
-
+" => universal coding shortcuts
+map <F5> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
+map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
+map <F6> :set nohlsearch<CR>
+map <F9> :make<CR>
+map <F10> :! ctags -R *<CR>
 " When pressing <leader>cd switch to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>
-
-""""""""""""""""""""""""""""""
 " => Visual mode related
-""""""""""""""""""""""""""""""
-"  In visual mode when you press * or # to search for the current selection
+" In visual mode when you press * or # to search for the current selection
 vnoremap <silent> * :call VisualSearch('f')<CR>
 vnoremap <silent> # :call VisualSearch('b')<CR>
-
 " When you press gv you vimgrep after the selected text
 vnoremap <silent> gv :call VisualSearch('gv')<CR>
-map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
-
 
 function! CmdLine(str)
     exe "menu Foo.Bar :" . a:str
@@ -180,9 +194,7 @@ function! VisualSearch(direction) range
     let @" = l:saved_reg
 endfunction
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => QuickFix
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Do :help cope if you are unsure what cope is. It's super useful!
 map <leader>ce :botright cope<cr>
 map <leader>n :cn<cr>
@@ -343,3 +355,4 @@ autocmd FileType scala map <Leader>se :Ensime<cr>
 " activate lazyredraw at the latest time, 
 " otherwise on startup it prevents the buffer to be rendered.
 set lazyredraw  " smoother looking plugins
+color solarized
