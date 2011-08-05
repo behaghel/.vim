@@ -13,7 +13,7 @@ set bg=dark
 syntax on
 set number
 set whichwrap=h,l,<,> " which key let you go to previous/next line
-set wildmenu
+set wildmenu          " Make the command-line completion better
 set hidden
 set backup
 set backupdir=~/.vim/tmp,~/.tmp,/var/tmp,/tmp
@@ -26,13 +26,13 @@ set ignorecase
 set smartcase         " noignorecase when capital in the search pattern
 set history=100
 set scrolloff=7       " context around cursor when reaching top/bottom
-set laststatus=2      " show status line?  Yes, always!
-set showmatch         " Show the matching bracket for the last ')'?
-set showcmd           " Show current uncompleted command?  Absolutely!
-set showmode          " Show the current mode?  YEEEEEEEEESSSSSSSSSSS!
+set laststatus=2      " show status line
+set showmatch         " Show the matching bracket for the last ')'
+set showcmd           " Show current uncompleted command
+set showmode          " Show the current mode
 set suffixes=.bak,.swp,.o,~,.class,.exe,.obj
                         " Suffixes to ignore in file completion
-set wildignore+=*.bak,*.swp,*.o,*~,*.class,*.exe,*.obj,.git,.svn,target
+set wildignore+=*.bak,*.swp,*.o,*~,*.class,*.exe,*.obj,.git,.svn,target,*.iml
 set title             " have your term title showing what you do
 set noerrorbells      " damn this beep!  ;-)
 set visualbell
@@ -40,6 +40,8 @@ set expandtab
 set sw=2
 set ts=2
 set ai
+set autoread          " Automatically read a file that has changed on disk
+set cursorline        " Highlight cursor line (!slows rendering!)
 
 nnoremap ' `
 nnoremap ` '
@@ -73,18 +75,18 @@ let $ADDED = '~/.vim/added/'
 " """""""""""""""""""""""
 " Addons 
 " """""""""""""""""""""""
-fun ActivateAddons()
+fun! ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
     call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
-      \ 'repeat', 'surround', 'unimpaired',
+      \ 'repeat', 'surround', 'unimpaired', 'camelcasemotion',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'ZenCoding', 'AutoClose1849', 'matchit.zip', 
-      \ 'taglist', 'lodgeit', 'Gist',
+      \ 'ZenCoding', 'matchit.zip', 'AutoClose',
+      \ 'taglist', 'lodgeit', 'Gist', 'vim-scala',
       \ 'tpope-markdown', 'ensime', 'snipMate', 
       \ 'gitv', 'fugitive', 'git.zip'])
-   ""   \ 'codefellow', 'scalacommenter', 'pydoc910', 
+   ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
     echoe v:exception
   endtry
@@ -112,11 +114,16 @@ if has("macunix")
   let g:vimcmd='mvim' " only my MacVim install has +clientserver
   let g:async={ 'vim': 'mvim' }
 endif
+" taglist
+let tlist_use_right_window = 1
 
 " addons shortcuts
-map <C-p> :Lodgeit<CR>
+"map <C-p> :Lodgeit<CR> too dangerous at work...
 map <F2> :TlistToggle<CR>
 map <F3> :NERDTreeToggle<CR>
+nmap <silent> <Leader>ob :CommandTBuffer<CR>
+nmap <silent> <Leader>of :CommandT<CR>
+nmap <silent> <Leader>ta <Plug>ToggleAutoCloseMappings
 
 
 " """""""""""""""""""""""
@@ -147,16 +154,26 @@ map <A-Left> :tabprevious<CR>
 " so you need to hardcode it...
 " $TERM == linux give the right behaviour but you then have to hardcode
 " t_Co...
-if &term =~ "konsole-256color"
-  map [1;5C :tabnext<CR>
-  map [1;5D : tabprevious<CR>
+if &term =~ "screen-256color"
+  map [1;3C :tabnext<CR>
+  map [1;3D : tabprevious<CR>
 endif
 map <C-n> :tabnew<CR> " <C-t> is for jump to previous tag (ctags)
 map <C-e> :tabe
 " => universal coding shortcuts
 map <F5> :execute "vimgrep /" . expand("<cword>") . "/j **" <Bar> cw<CR>
-map <leader>g :vimgrep // **/*.<left><left><left><left><left><left><left>
-map <F6> :set nohlsearch<CR>
+" Search the current file for what's currently in the search register and display matches
+nmap <silent> <leader>gs :vimgrep /<C-r>// %<CR>:ccl<CR>:cwin<CR><C-W>J:nohls<CR>
+" Search the current file for the word under the cursor and display matches
+nmap <silent> <leader>gw :vimgrep /<C-r><C-w>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:nohls<CR>
+" Search the current file for the WORD under the cursor and display matches
+nmap <silent> <leader>gW :vimgrep /<C-r><C-a>/ %<CR>:ccl<CR>:cwin<CR><C-W>J:nohls<CR>
+" Toggle hlsearch 
+map <silent> <leader>th :set invhlsearch<CR>:set hlsearch?<CR>
+" Toggle paste
+nmap <silent> <leader>tp :set invpaste<CR>:set paste?<CR>
+" Toggle wrap
+nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
 map <F9> :make<CR>
 map <F10> :! ctags -R *<CR>
 " When pressing <leader>cd switch to the directory of the open buffer
@@ -197,8 +214,6 @@ endfunction
 " => QuickFix
 " Do :help cope if you are unsure what cope is. It's super useful!
 map <leader>ce :botright cope<cr>
-map <leader>n :cn<cr>
-map <leader>p :cp<cr>
 
 "" Restore cursor position
 function! ResCur()
@@ -224,14 +239,8 @@ autocmd FileType mail nmap <F9> :w<CR>:!aspell -e -c %<CR>:e<CR>
 """"""""""""""""""
 " " Editing LaTeX
 au BufNewFile *.tex r ~/.vim/modele.tex
-" Comment
-autocmd FileType tex map <F7> I%<ESC>j
-autocmd FileType tex imap <C-F7> <C-O><F7>
-autocmd FileType tex map <F8> :s/^\s*%*//
-autocmd FileType tex imap <C-F8> <C-O><F8>
 
 autocmd FileType tex set makeprg=pdflatex
-autocmd FileType tex map <F9> :make %
 " to be improved
 "autocmd FileType tex map <F10> :! xdvi %
 " Entering in an environment
@@ -241,21 +250,12 @@ autocmd FileType tex map <F9> :make %
 """"""""""""""""""
 " " Editing HTML
 au BufNewFile *.html r ~/.vim/modele.html
-" Comments
-autocmd Filetype html map <F8> :s/\(.*\)/<!--\1-->/
-autocmd Filetype html imap <F8> <C-O><C-F8>
 """"""""""""""""""
 " " Editing CSS
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
 
 """""""""""""""""""
 " " Editing C
-" Comment current line
-autocmd Filetype c map <F7> I/*A*/j0
-autocmd Filetype c imap <F7> I/*A*/j0i
-" Uncomment
-autocmd Filetype c map <F8> :s,/\*\(.*\)\*/,\1,
-autocmd Filetype c imap <F8> <C-O><F8>
 " autoformat comments (ANSI)
 autocmd Filetype c set comments=sl1:/*,mb:*,elx:*/
 autocmd Filetype c set fo=croq
@@ -323,11 +323,15 @@ autocmd FileType python map <F12> :! python %<CR>
 " http://www.praytothemachine.com/evil/2008/05/16/liftweb-ctags-vim/
 let tlist_scala_settings = "scala;c:Class;t:Trait;m:Method;o:Object;r:Definition"
 " snippets from : http://github.com/tommorris/scala-vim-snippets
-autocmd FileType scala set makeprg=sbt\ -n\ compile
-autocmd FileType scala let current_compiler = "sbt"
-autocmd FileType scala set makeprg=sbt\ compile
+"autocmd FileType scala set makeprg=sbt\ -n\ compile
+"autocmd FileType scala let current_compiler = "sbt"
+"autocmd FileType scala set makeprg=sbt\ compile
 autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
        \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
+       \%-G%.%#
+" maven scala plugin only output the first line with [error] other with [info]
+autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%Z\ %#[info]\ %p^,%-C[info]\ \ \ %.%#,%+C[info]\ \ %.%#,
+       \%W\ %#[warning]\ %f:%l:\ %m,%-C%.%#,
        \%-G%.%#
 autocmd FileType scala set errorfile=target/error
 " scalacommenter plugin
