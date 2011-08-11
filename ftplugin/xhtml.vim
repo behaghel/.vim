@@ -1,0 +1,1 @@
+/Users/hub/.vim-plugins/xmledit/ftplugin/xml.vim
