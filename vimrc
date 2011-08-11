@@ -32,7 +32,7 @@ set showcmd           " Show current uncompleted command
 set showmode          " Show the current mode
 set suffixes=.bak,.swp,.o,~,.class,.exe,.obj
                         " Suffixes to ignore in file completion
-set wildignore+=*.bak,*.swp,*.o,*~,*.class,*.exe,*.obj,.git,.svn,target,*.iml
+set wildignore+=*.bak,*.swp,*.o,*~,*.class,*.exe,*.obj,.git,.svn,target,*.iml,*.jar,*.lock
 set title             " have your term title showing what you do
 set noerrorbells      " damn this beep!  ;-)
 set visualbell
@@ -58,9 +58,9 @@ set foldlevelstart=99
 "  n... :  where to save the viminfo files
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
-if (&shell=="/bin/zsh")
-  set shell=/bin/bash
-endif
+"if (&shell=="/bin/zsh")
+"  set shell=/bin/bash
+"endif
 
 if has("unix")
   set shcf=-ic
@@ -84,7 +84,7 @@ fun! ActivateAddons()
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'ZenCoding', 'matchit.zip', 'AutoClose',
       \ 'taglist', 'lodgeit', 'Gist', 'vim-scala',
-      \ 'tpope-markdown', 'ensime', 'snipMate', 
+      \ 'tpope-markdown', 'ensime', 'snipmate', 
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
@@ -330,9 +330,24 @@ autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%
        \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
        \%-G%.%#
 " maven scala plugin only output the first line with [error] other with [info]
-autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,%Z\ %#[info]\ %p^,%-C[info]\ \ \ %.%#,%+C[info]\ \ %.%#,
+autocmd FileType scala set efm=%E\ %#[error]\ %f:%l:\ %m,
+       \%Z\ %#[error]\ %p^,%Z\ %#[info]\ %p^,
+       \%-C[error]\ \ \ %.%#,%-C[info]\ \ \ %.%#,
+       \%+C[error]\ \ %.%#,%+C[info]\ \ %.%#,
        \%W\ %#[warning]\ %f:%l:\ %m,%-C%.%#,
        \%-G%.%#
+" I read the efm above like this: 
+" start collecting errors when you find [error] around the beginning. 
+" stop collecting error when you find line with ^ to mark error
+" If line has [error] then 3 spaces do not count it has part of the error msg
+" (same thing with [info]: bug mvn-scala-plugin)
+" If line has [error] then 2 spaces: count it as part of msg (has to be after
+" previous line!)
+" (same thing with [info]: bug mvn-scala-plugin)
+"
+" I noticed that 3 spaces or more are for the source with the ^ on next line
+" 2 spaces are for the explanation (eg type mismatch found/required)
+
 autocmd FileType scala set errorfile=target/error
 " scalacommenter plugin
 "autocmd FileType scala source $HOME/.vim-plugins/scalacommenter/plugin/scalacommenter.vim 

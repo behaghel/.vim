@@ -104,3 +104,24 @@ snippet spec
 		  }
 		}
 	  }
+
+snippet mongorecord
+	class ${1:record} private () extends MongoRecord[$1] with ObjectIdPk[$1] {
+	  def meta = $1
+	  ${2:// fields}
+	}
+	object $1 extends $1 with MongoMetaRecord[$1]
+
+snippet bsonrecord
+	class ${1:record} private () extends BsonRecord[$1] {
+	  def meta = $1
+	  ${2:// fields}
+	}
+	object $1 extends $1 with BsonMetaRecord[$1]
+
+snippet jsonobject
+	case class ${1:record}(${2:fields}) extends JsonObject[$1] {
+	  def meta = $1
+	  ${2:// fields}
+	}
+	object $1 extends JsonObjectMeta[$1]
