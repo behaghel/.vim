@@ -95,7 +95,11 @@ call ActivateAddons()
 
 "" Gist
 " -c will put it in clipboard
-let g:gist_clip_command = 'pbcopy'
+if has("macunix")
+  let g:gist_clip_command = 'pbcopy'
+else 
+  let g:gist_clip_command = 'xclip -selection clipboard'
+endif
 " detect filetype with Gist filename
 let g:gist_detect_filetype = 1
 " to open browser on the gist after creating it
@@ -371,6 +375,8 @@ autocmd FileType scala set errorfile=target/error
 autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
 autocmd FileType scala map <Leader>se :Ensime<cr>
 
+" Project specifics setting (TODO externalize)
+autocmd BufRead,BufNew ~/ws/hub-emc/* set ts=4 sw=4 makeprg=mvn\ -Donce=true\ scala:cc
 " activate lazyredraw at the latest time, 
 " otherwise on startup it prevents the buffer to be rendered.
 set lazyredraw  " smoother looking plugins

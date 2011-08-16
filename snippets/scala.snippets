@@ -88,7 +88,7 @@ snippet 2
 snippet 3
 	(${1:first}: ${2:Type}, ${3:second}: ${4:Type}, ${5:third}: ${6:Type})
 
-snippet specclass
+snippet scalatestspecclass
 	import org.scalatest.Spec
 	import org.scalatest.matchers.ShouldMatchers
 	import scala.collection.mutable.Stack
@@ -96,7 +96,7 @@ snippet specclass
 	class ${1:spec} extends Spec with ShouldMatchers {
 	  ${2}
 	}
-snippet spec
+snippet scalatestspec
 	  describe ("${1:domain}") {
 		describe ("${2:tool}") {
 		  it ("${3:contract}") {
@@ -104,7 +104,6 @@ snippet spec
 		  }
 		}
 	  }
-
 snippet mongorecord
 	class ${1:record} private () extends MongoRecord[$1] with ObjectIdPk[$1] {
 	  def meta = $1
@@ -125,3 +124,17 @@ snippet jsonobject
 	  ${2:// fields}
 	}
 	object $1 extends JsonObjectMeta[$1]
+snippet specs1junitclass
+	import org.specs._
+	
+	class ${1:testclass}Test extends SpecificationWithJUnit {
+	  ${2:specs}
+	}
+snippet spec1
+	"${1:system_under_test}" should {
+	  ${2:behaviour}
+	}
+snippet spec1behaviour
+	"${1:behaviour}" in {
+	  ${2:check}
+	}
