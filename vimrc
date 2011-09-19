@@ -146,8 +146,8 @@ nmap <C-Tab> :b#<CR>
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
 " => tabs
-map <A-Right> :tabnext<CR>
-map <A-Left> :tabprevious<CR>
+map <M-Right> :tabnext<CR>
+map <M-Left> :tabprevious<CR>
 " inside konsole, if you want automatic t_Co setting, 
 " you need to have $TERM == konsole-256color
 " but the input config by default does not give you usual behaviour
