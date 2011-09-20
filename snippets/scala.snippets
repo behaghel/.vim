@@ -96,6 +96,7 @@ snippet scalatestspecclass
 	class ${1:spec} extends Spec with ShouldMatchers {
 	  ${2}
 	}
+
 snippet scalatestspec
 	  describe ("${1:domain}") {
 		describe ("${2:tool}") {
@@ -104,6 +105,33 @@ snippet scalatestspec
 		  }
 		}
 	  }
+
+snippet specs1junitclass
+	import org.specs._
+	
+	class ${1:testclass}Test extends SpecificationWithJUnit {
+	  ${2:specs}
+	}
+
+snippet spec1
+	"${1:system_under_test}" should {
+	  ${2:behaviour}
+	}
+
+snippet spec1behaviour
+	"${1:behaviour}" in {
+	  ${2:check}
+	}
+
+snippet mapper
+	class ${1:mapper} extends LongKeyedMapper[$1] 
+			with CreatedUpdated with IdPK {
+		def getSingleton = $1
+		${2:fields}
+	}
+	object $1 extends $1 
+			with LongKeyedMetaMapper[$1]
+
 snippet mongorecord
 	class ${1:record} private () extends MongoRecord[$1] with ObjectIdPk[$1] {
 	  def meta = $1
@@ -124,17 +152,17 @@ snippet jsonobject
 	  ${2:// fields}
 	}
 	object $1 extends JsonObjectMeta[$1]
-snippet specs1junitclass
-	import org.specs._
-	
-	class ${1:testclass}Test extends SpecificationWithJUnit {
-	  ${2:specs}
-	}
-snippet spec1
-	"${1:system_under_test}" should {
-	  ${2:behaviour}
-	}
-snippet spec1behaviour
-	"${1:behaviour}" in {
-	  ${2:check}
-	}
+
+snippet importsnippet
+	import _root_.net.liftweb.util._
+	import _root_.net.liftweb.common._
+	import Helpers._
+	import _root_.net.liftweb.http._
+	import js._
+	import JsCmds._
+	import JE._
+	import js.jquery.JqJsCmds._
+	import js.jquery.JqJE._
+	import Bindings._
+	$1
+

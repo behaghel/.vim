@@ -58,9 +58,10 @@ set foldlevelstart=99
 "  n... :  where to save the viminfo files
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
-"if (&shell=="/bin/zsh")
-"  set shell=/bin/bash
-"endif
+" useful notably for ensime that freezes on start with zsh.
+if (&shell=="/bin/zsh")
+  set shell=/bin/bash
+endif
 
 if has("unix")
   set shcf=-ic
@@ -78,13 +79,13 @@ let $ADDED = '~/.vim/added/'
 fun! ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
-    call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
+    call vam#ActivateAddons(['The_NERD_tree',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'repeat', 'surround', 'unimpaired', 'camelcasemotion',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'ZenCoding', 'matchit.zip', 'AutoClose',
       \ 'taglist', 'lodgeit', 'Gist', 'vim-scala',
-      \ 'tpope-markdown', 'ensime', 'snipmate', 
+      \ 'tpope-markdown', 'ensime', 'snipmate-snippets',
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
@@ -178,6 +179,8 @@ map <silent> <leader>th :set invhlsearch<CR>:set hlsearch?<CR>
 nmap <silent> <leader>tp :set invpaste<CR>:set paste?<CR>
 " Toggle wrap
 nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
+" Toggle show invisible char
+nmap <silent> <leader>ti :set invlist<CR>:set list?<CR>
 map <F9> :make<CR>
 map <F10> :! ctags -R *<CR>
 " When pressing <leader>cd switch to the directory of the open buffer
