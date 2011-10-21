@@ -63,15 +63,12 @@ if (&shell=="/bin/zsh")
   set shell=/bin/bash
 endif
 
-if has("unix")
-  set shcf=-ic
-endif
+"if has("unix")
+"  set shcf=-ic
+"endif
 let mapleader = ","
 
 let $ADDED = '~/.vim/added/'
-"if has("win32")
-"  let $ADDED = $VIM.'/added/'
-"endif
 
 " """""""""""""""""""""""
 " Addons 
@@ -111,7 +108,7 @@ let g:snips_author = 'Hubert Behaghel'
 " in order to be able to fold xml blocks
 let g:xml_syntax_folding = 1
 let xml_use_xhtml = 1
-let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib$', '^lib_managed$', '^target$']
+let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib_managed$', '^target$']
 " CommandT options
 let g:CommandTMaxHeight = 15
 " vim-addon-async
