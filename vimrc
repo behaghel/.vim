@@ -58,19 +58,17 @@ set foldlevelstart=99
 "  n... :  where to save the viminfo files
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
-"if (&shell=="/bin/zsh")
-"  set shell=/bin/bash
-"endif
-
-if has("unix")
-  set shcf=-ic
+" useful notably for ensime that freezes on start with zsh.
+if (&shell=="/bin/zsh")
+  set shell=/bin/bash
 endif
+
+"if has("unix")
+"  set shcf=-ic
+"endif
 let mapleader = ","
 
 let $ADDED = '~/.vim/added/'
-"if has("win32")
-"  let $ADDED = $VIM.'/added/'
-"endif
 
 " """""""""""""""""""""""
 " Addons 
@@ -78,7 +76,7 @@ let $ADDED = '~/.vim/added/'
 fun! ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
-    call vam#ActivateAddons(['The_NERD_tree', 'xmledit', 
+    call vam#ActivateAddons(['The_NERD_tree',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'repeat', 'surround', 'unimpaired', 'camelcasemotion',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
@@ -95,7 +93,11 @@ call ActivateAddons()
 
 "" Gist
 " -c will put it in clipboard
-let g:gist_clip_command = 'pbcopy'
+if has("macunix")
+  let g:gist_clip_command = 'pbcopy'
+else 
+  let g:gist_clip_command = 'xclip -selection clipboard'
+endif
 " detect filetype with Gist filename
 let g:gist_detect_filetype = 1
 " to open browser on the gist after creating it
@@ -106,7 +108,7 @@ let g:snips_author = 'Hubert Behaghel'
 " in order to be able to fold xml blocks
 let g:xml_syntax_folding = 1
 let xml_use_xhtml = 1
-let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib$', '^lib_managed$', '^target$']
+let NERDTreeIgnore=['\.vim$', '\~$', '.*class$', '^boot$', '^lib_managed$', '^target$']
 " CommandT options
 let g:CommandTMaxHeight = 15
 " vim-addon-async
@@ -174,6 +176,8 @@ map <silent> <leader>th :set invhlsearch<CR>:set hlsearch?<CR>
 nmap <silent> <leader>tp :set invpaste<CR>:set paste?<CR>
 " Toggle wrap
 nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
+" Toggle show invisible char
+nmap <silent> <leader>ti :set invlist<CR>:set list?<CR>
 map <F9> :make<CR>
 map <F10> :! ctags -R *<CR>
 " When pressing <leader>cd switch to the directory of the open buffer
@@ -371,6 +375,8 @@ autocmd FileType scala set errorfile=target/error
 autocmd FileType scala map <Leader>= :EnsimeFormatSource<cr>
 autocmd FileType scala map <Leader>se :Ensime<cr>
 
+" Project specifics setting (TODO externalize)
+autocmd BufRead,BufNew ~/ws/hub-emc/* set ts=4 sw=4 makeprg=mvn\ -Donce=true\ scala:cc
 " activate lazyredraw at the latest time, 
 " otherwise on startup it prevents the buffer to be rendered.
 set lazyredraw  " smoother looking plugins
