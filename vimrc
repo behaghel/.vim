@@ -83,8 +83,8 @@ fun! ActivateAddons()
       \ 'repeat', 'surround', 'unimpaired', 'camelcasemotion',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'ZenCoding', 'matchit.zip', 'AutoClose',
-      \ 'taglist', 'lodgeit', 'Gist', 'vim-scala',
-      \ 'tpope-markdown', 'ensime', 'snipmate', 
+      \ 'taglist', 'lodgeit', 'Gist', 'behaghel-scala-vim-github',
+      \ 'markdown', 'ensime', 'snipmate-snippets', 
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
