@@ -132,17 +132,13 @@ nmap <silent> <Leader>ta <Plug>ToggleAutoCloseMappings
 " general mapping
 " """""""""""""""""""""""
  
-" My mac can't make Ctrl-] work out f the box :-(
-if has("macunix")
-  map  <C-]>
-  map [5C :tabnext<CR>
-  map [5D :tabprevious<CR>
-endif
 " reformat paragraphs
 imap <C-J> <C-O>gqap
 nmap <C-J>      gqap
 vmap <C-J>      gq
 " easy switch between current and previously edited buffer
+" fr layout make ^ a dead key, hence no <C-^> without AltGr
+" (doesn't work in outside of GUI...)
 nmap <C-Tab> :b#<CR>
 " to have Ctrl-Spce triggering omnicomplete
 inoremap <C-Space> <C-x><C-o>
@@ -159,6 +155,12 @@ map <A-Left> :tabprevious<CR>
 if &term =~ "screen-256color"
   map [1;3C :tabnext<CR>
   map [1;3D : tabprevious<CR>
+endif
+" My mac can't make Ctrl-] work out f the box :-(
+if has("macunix")
+  map  <C-]>
+  map [5C :tabnext<CR>
+  map [5D :tabprevious<CR>
 endif
 map <C-n> :tabnew<CR> " <C-t> is for jump to previous tag (ctags)
 map <C-e> :tabe
@@ -178,6 +180,8 @@ nmap <silent> <leader>tp :set invpaste<CR>:set paste?<CR>
 nmap <silent> <leader>tw :set invwrap<CR>:set wrap?<CR>
 " Toggle show invisible char
 nmap <silent> <leader>ti :set invlist<CR>:set list?<CR>
+" Toggle current/previous buffer
+nmap <silent> <leader>tb :b#<CR>
 map <F9> :make<CR>
 map <F10> :! ctags -R *<CR>
 " When pressing <leader>cd switch to the directory of the open buffer
