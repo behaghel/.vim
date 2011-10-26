@@ -81,8 +81,8 @@ fun! ActivateAddons()
       \ 'repeat', 'surround', 'unimpaired', 'camelcasemotion',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'ZenCoding', 'matchit.zip', 'AutoClose',
-      \ 'taglist', 'lodgeit', 'Gist', 'vim-scala',
-      \ 'tpope-markdown', 'ensime', 'snipmate-snippets',
+      \ 'taglist', 'lodgeit', 'Gist', 'behaghel-scala-vim-github',
+      \ 'markdown', 'ensime', 'snipmate-snippets', 
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
@@ -144,8 +144,8 @@ nmap <C-Tab> :b#<CR>
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
 " => tabs
-map <A-Right> :tabnext<CR>
-map <A-Left> :tabprevious<CR>
+map <M-Right> :tabnext<CR>
+map <M-Left> :tabprevious<CR>
 " inside konsole, if you want automatic t_Co setting, 
 " you need to have $TERM == konsole-256color
 " but the input config by default does not give you usual behaviour
