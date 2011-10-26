@@ -136,6 +136,9 @@ vmap <C-J>      gq
 " fr layout make ^ a dead key, hence no <C-^> without AltGr
 " (doesn't work in outside of GUI...)
 nmap <C-Tab> :b#<CR>
+" on screen and other term, C-Tab becomes only Tab, 
+" you need to instruct your shell to send [27;5;9~ on C-Tab
+nmap [27;5;9~ :b#<CR> 
 " to have Ctrl-Spce triggering omnicomplete
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
