@@ -2,10 +2,6 @@ set nocompatible      " must be the first line
 filetype on
 filetype indent on
 filetype plugin on
-"set statusline=%<%f\%h%m%r%=%-20.(line=%l\ \ col=%c%V\ \ totlin=%L%)\ \ \%h%m%r%=%-40(bytval=0x%B,%n%Y%)\%P
-" with CWD
-"set statusline=[%n]%h%m%r%f\ \ cwd:\ %r%{getcwd()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
-set statusline=[%n]%h%m%r%f\ \ %{fugitive#statusline()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
 
 
 "" General options
@@ -78,11 +74,11 @@ fun! ActivateAddons()
   try
     call vam#ActivateAddons(['The_NERD_tree',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
-      \ 'repeat', 'surround', 'unimpaired', 'camelcasemotion',
+      \ 'repeat', 'surround', 'unimpaired', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'ZenCoding', 'matchit.zip', 'AutoClose',
-      \ 'taglist', 'lodgeit', 'Gist', 'behaghel-scala-vim-github',
-      \ 'markdown', 'ensime', 'snipmate-snippets', 
+      \ 'behaghel-scala-vim-github',
+      \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist', 'lodgeit', 'Gist', 
+      \ 'tpope-markdown', 'ensime', 'snipmate-snippets', 
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
@@ -381,6 +377,11 @@ autocmd FileType scala map <Leader>se :Ensime<cr>
 
 " Project specifics setting (TODO externalize)
 autocmd BufRead,BufNew ~/ws/hub-emc/* set ts=4 sw=4 makeprg=mvn\ -Donce=true\ scala:cc
+
+"set statusline=%<%f\%h%m%r%=%-20.(line=%l\ \ col=%c%V\ \ totlin=%L%)\ \ \%h%m%r%=%-40(bytval=0x%B,%n%Y%)\%P
+" with CWD
+"set statusline=[%n]%h%m%r%f\ \ cwd:\ %r%{getcwd()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
+set statusline=[%n]%h%m%r%f\ \ %{fugitive#statusline()}%h%<%=%(pos=%l/%L:%c%V%)\ %-Y\ %P
 " activate lazyredraw at the latest time, 
 " otherwise on startup it prevents the buffer to be rendered.
 set lazyredraw  " smoother looking plugins

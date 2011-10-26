@@ -1,1 +1,0 @@
-/home/hubert.behaghel/.vim-plugins/AutoClose1849/archive/autoclose.vim
