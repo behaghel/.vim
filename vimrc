@@ -78,7 +78,7 @@ fun! ActivateAddons()
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'behaghel-scala-vim-github',
       \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist', 'lodgeit', 'Gist', 
-      \ 'tpope-markdown', 'ensime', 'snipmate-snippets', 
+      \ 'markdown', 'ensime', 'snipmate-snippets', 
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
   catch /.*/
