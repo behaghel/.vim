@@ -54,6 +54,9 @@ set foldlevelstart=99
 "  n... :  where to save the viminfo files
 set viminfo='10,\"100,:20,%,n~/.viminfo
 
+set ttymouse=xterm2
+set mouse=a
+
 " useful notably for ensime that freezes on start with zsh.
 if (&shell=="/bin/zsh")
   set shell=/bin/bash
@@ -74,9 +77,9 @@ fun! ActivateAddons()
   try
     call vam#ActivateAddons(['The_NERD_tree',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
-      \ 'repeat', 'surround', 'unimpaired', 
+      \ 'repeat', 'surround', 'unimpaired', 'tabular',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'behaghel-scala-vim-github',
+      \ 'behaghel-scala-vim-github', 'simplenote',
       \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist', 'lodgeit', 'Gist', 
       \ 'tpope-markdown', 'ensime', 'snipmate-snippets', 
       \ 'gitv', 'fugitive', 'git.zip'])
@@ -87,6 +90,9 @@ fun! ActivateAddons()
 endf
 call ActivateAddons()
 
+" fugitive
+" autodelete fugitive buffers when hidden
+autocmd BufReadPost fugitive://* set bufhidden=delete
 "" Gist
 " -c will put it in clipboard
 if has("macunix")
@@ -99,7 +105,7 @@ let g:gist_detect_filetype = 1
 " to open browser on the gist after creating it
 let g:gist_open_browser_after_post = 1
 " snipMate
-let g:snippets_dir = '~/.vim-plugins/snipMate/snippets,~/.vim/snippets'
+"let g:snippets_dir = '~/.vim-plugins/snipMate/snippets,~/.vim/snippets'
 let g:snips_author = 'Hubert Behaghel'
 " in order to be able to fold xml blocks
 let g:xml_syntax_folding = 1
@@ -114,6 +120,8 @@ if has("macunix")
 endif
 " taglist
 let tlist_use_right_window = 1
+" simplenote
+source ~/.vim-plugins/simplenote/cred
 
 " addons shortcuts
 "map <C-p> :Lodgeit<CR> too dangerous at work...
@@ -138,7 +146,7 @@ vmap <C-J>      gq
 nmap <C-Tab> :b#<CR>
 " on screen and other term, C-Tab becomes only Tab, 
 " you need to instruct your shell to send [27;5;9~ on C-Tab
-nmap [27;5;9~ :b#<CR> 
+nmap [27;5;9~ :b#<CR>
 " to have Ctrl-Spce triggering omnicomplete
 inoremap <C-Space> <C-x><C-o>
 inoremap <Nul> <C-x><C-o>
