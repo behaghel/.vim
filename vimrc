@@ -38,6 +38,7 @@ set ts=2
 set ai
 set autoread          " Automatically read a file that has changed on disk
 set cursorline        " Highlight cursor line (!slows rendering!)
+set backspace=start,indent " let backspace delete previous char
 
 nnoremap ' `
 nnoremap ` '
@@ -127,7 +128,11 @@ nmap <silent> <Leader>ta <Plug>ToggleAutoCloseMappings
 " """""""""""""""""""""""
 " general mapping
 " """""""""""""""""""""""
- 
+"make Y consistent with C and D
+nnoremap Y y$
+"make <c-l> clear the highlight as well as redraw
+nnoremap <C-L> :nohls<CR><C-L>
+inoremap <C-L> <C-O>:nohls<CR>
 " reformat paragraphs
 imap <C-J> <C-O>gqap
 nmap <C-J>      gqap
@@ -160,6 +165,8 @@ if has("macunix")
   map  <C-]>
   map [5C :tabnext<CR>
   map [5D :tabprevious<CR>
+  map ^[[1;9D :tabprevious<CR>
+  map ^[[1;9C :tabnext<CR>
 endif
 map <C-n> :tabnew<CR> " <C-t> is for jump to previous tag (ctags)
 map <C-e> :tabe
