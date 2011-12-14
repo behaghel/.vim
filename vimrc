@@ -264,7 +264,7 @@ autocmd FileType tex set makeprg=pdflatex
 
 """"""""""""""""""
 " " Editing HTML
-au BufNewFile *.html r ~/.vim/modele.html
+"au BufNewFile *.html r ~/.vim/modele.html
 """"""""""""""""""
 " " Editing CSS
 autocmd FileType css set omnifunc=csscomplete#CompleteCSS
