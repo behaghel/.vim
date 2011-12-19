@@ -70,6 +70,7 @@ let mapleader = ","
 
 let $ADDED = '~/.vim/added/'
 
+source ~/.vim/bépo.vim
 " """""""""""""""""""""""
 " Addons 
 " """""""""""""""""""""""
@@ -77,14 +78,16 @@ fun! ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
     call vam#ActivateAddons(['The_NERD_tree',
-      \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'repeat', 'surround', 'unimpaired', 'tabular',
-      \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'behaghel-scala-vim-github', 'simplenote',
-      \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist', 'lodgeit', 'Gist', 
+      \ 'behaghel-scala-vim-github', 'Rainbow_Parenthsis_Bundle',
+      \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist',
       \ 'markdown', 'ensime', 'snipmate-snippets', 
+      \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
+      \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
+      "\ 'simplenote', 'lodgeit', 'Gist', 
+      "
   catch /.*/
     echoe v:exception
   endtry
@@ -122,7 +125,9 @@ endif
 " taglist
 let tlist_use_right_window = 1
 " simplenote
-source ~/.vim-plugins/simplenote/cred
+"source ~/.vim-plugins/simplenote/cred
+" rainbow_parenthsis
+let g:btm_rainbow_color = 1
 
 " addons shortcuts
 "map <C-p> :Lodgeit<CR> too dangerous at work...
@@ -136,6 +141,9 @@ nmap <silent> <Leader>ta <Plug>ToggleAutoCloseMappings
 " """""""""""""""""""""""
 " general mapping
 " """""""""""""""""""""""
+" fix azerty for coding productivity
+noremap ; .
+noremap . ;
 "make Y consistent with C and D
 nnoremap Y y$
 "make <c-l> clear the highlight as well as redraw
@@ -395,6 +403,7 @@ autocmd FileType scala map <Leader>se :Ensime<cr>
 
 " Project specifics setting (TODO externalize)
 autocmd BufRead,BufNew ~/ws/hub-emc/* set ts=4 sw=4 makeprg=mvn\ -Donce=true\ scala:cc
+nmap <S-F9> :set makeprg=mvn\ compile<CR>:make<CR>:set makeprg=mvn\ -Donce=true\ scala:cc<CR>
 
 "set statusline=%<%f\%h%m%r%=%-20.(line=%l\ \ col=%c%V\ \ totlin=%L%)\ \ \%h%m%r%=%-40(bytval=0x%B,%n%Y%)\%P
 " with CWD
