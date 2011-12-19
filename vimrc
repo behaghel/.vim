@@ -80,14 +80,8 @@ fun! ActivateAddons()
   try
     call vam#ActivateAddons(['The_NERD_tree',
       \ 'repeat', 'surround', 'unimpaired', 'tabular',
-<<<<<<< HEAD
-      \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'behaghel-scala-vim-github',
-      \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist', 'lodgeit', 'Gist', 
-=======
       \ 'behaghel-scala-vim-github', 'Rainbow_Parenthsis_Bundle',
       \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist',
->>>>>>> cd4b114f40cfc9b4a7d76514776e39c215b83ca6
       \ 'markdown', 'ensime', 'snipmate-snippets', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
@@ -131,13 +125,10 @@ if has("macunix")
 endif
 " taglist
 let tlist_use_right_window = 1
-<<<<<<< HEAD
-=======
 " simplenote
 "source ~/.vim-plugins/simplenote/cred
 " rainbow_parenthsis
 let g:btm_rainbow_color = 1
->>>>>>> cd4b114f40cfc9b4a7d76514776e39c215b83ca6
 
 " addons shortcuts
 "map <C-p> :Lodgeit<CR> too dangerous at work...
