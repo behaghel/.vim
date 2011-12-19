@@ -70,6 +70,8 @@ let mapleader = ","
 
 let $ADDED = '~/.vim/added/'
 
+source ~/.vim/bépo.vim
+
 " """""""""""""""""""""""
 " Addons 
 " """""""""""""""""""""""
@@ -80,7 +82,7 @@ fun! ActivateAddons()
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'repeat', 'surround', 'unimpaired', 'tabular',
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'behaghel-scala-vim-github', 'simplenote',
+      \ 'behaghel-scala-vim-github',
       \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist', 'lodgeit', 'Gist', 
       \ 'markdown', 'ensime', 'snipmate-snippets', 
       \ 'gitv', 'fugitive', 'git.zip'])
@@ -121,8 +123,6 @@ if has("macunix")
 endif
 " taglist
 let tlist_use_right_window = 1
-" simplenote
-source ~/.vim-plugins/simplenote/cred
 
 " addons shortcuts
 "map <C-p> :Lodgeit<CR> too dangerous at work...
