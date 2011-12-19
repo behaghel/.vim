@@ -7,7 +7,7 @@ noremap <C-Right> :tabnext<CR>
 noremap <C-Left> :tabprevious<CR>
 set guioptions=ace
 set guifont=Droid\ Sans\ Mono:h14
-set fuoptions=maxvert,maxhorz
+"set fuoptions=maxvert,maxhorz
 " in fact, color does not concern only gvim: 
 " shell vim can use it too
 " color underwater
