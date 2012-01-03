@@ -71,20 +71,3 @@ noremap » >
 inoremap « <
 inoremap » >
 
-
-" CommandT options
-let g:CommandTSelectNextMap = ['<C-t>', '<C-n>', '<Down>']
-let g:CommandTSelectPrevMap = ['<C-s>', '<C-p>', '<Up>']
-let g:CommandTAcceptSelectionTabMap = ['<C-T>']
-let g:CommandTAcceptSelectionSplitMap = ['<C-S>', '<C-CR>']
-" surround
-" disable s in visual (bepo conflict)
-xmap <Leader>s <Plug>Vsurround
-nmap ls        <Plug>Csurround
-
-" camelcasemotion
-map <silent> <leader>é <Plug>CamelCaseMotion_w
-sunmap <leader>é
-omap <silent> <leader>ié <Plug>CamelCaseMotion_iw
-xmap <silent> <leader>ié <Plug>CamelCaseMotion_iw
-
