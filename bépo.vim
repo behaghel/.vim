@@ -62,7 +62,7 @@ noremap gé gt
 noremap gB :exe "silent! tabfirst"<CR>
 noremap gÉ :exe "silent! tablast"<CR>
 " optionnel : {g"} pour aller au début de la ligne écran
-noremap g" g0
+" noremap g" g0
  
 " <> en direct
 " ————————————
@@ -73,9 +73,9 @@ inoremap » >
 
 
 " CommandT options
+let g:CommandTAcceptSelectionTabMap = ['<C-h>']
 let g:CommandTSelectNextMap = ['<C-t>', '<C-n>', '<Down>']
 let g:CommandTSelectPrevMap = ['<C-s>', '<C-p>', '<Up>']
-let g:CommandTAcceptSelectionTabMap = ['<C-T>']
 let g:CommandTAcceptSelectionSplitMap = ['<C-S>', '<C-CR>']
 " surround
 " disable s in visual (bepo conflict)
