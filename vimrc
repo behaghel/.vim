@@ -70,7 +70,9 @@ let mapleader = ","
 
 let $ADDED = '~/.vim/added/'
 
-source ~/.vim/bépo.vim
+source ~/.vim/bepo.vim
+source ~/.vim/bepo-addons.vim
+
 " """""""""""""""""""""""
 " Addons 
 " """""""""""""""""""""""
