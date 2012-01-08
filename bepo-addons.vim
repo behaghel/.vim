@@ -34,3 +34,15 @@ sunmap <leader>é
 omap <silent> <leader>ié <Plug>CamelCaseMotion_iw
 xmap <silent> <leader>ié <Plug>CamelCaseMotion_iw
 
+" NERDTree
+let NERDTreeMapOpenInTab='h'
+let NERDTreeMapOpenInTabSilent='H'
+let NERDTreeMapOpenVSplit='<C-v>'
+let NERDTreeMapJumpFirstChild='S'
+let NERDTreeMapJumpLastChild='T'
+let NERDTreeMapJumpNextSibling='<C-T>'
+let NERDTreeMapJumpPrevSibling='<C-S>'
+"let NERDTreeMapChdir='L'
+"let NERDTreeMapRefresh='j'
+"let NERDTreeMapRefreshRoot='J'
+

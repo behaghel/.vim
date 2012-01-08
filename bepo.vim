@@ -12,6 +12,22 @@ noremap aÉ aW
 " Pour faciliter les manipulations de fenêtres, on utilise {W} comme un Ctrl+W :
 noremap w <C-w>
 noremap W <C-w><C-w>
+
+noremap wt <C-w><Down>
+noremap ws <C-w><Up>
+noremap wc <C-w><Left>
+noremap wr <C-w><Right>
+noremap wT <C-w>K
+noremap wS <C-w>J
+noremap wC <C-w>H
+noremap wR <C-w>L
+
+noremap <C-w>C <C-w>c
+noremap <C-w>h <C-w>t
+noremap <C-w>H <C-w>T
+
+noremap <C-à> <C-^>
+
  
 " [HJKL] -> {CTSR}
 " ————————————————
