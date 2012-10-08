@@ -1,12 +1,8 @@
-set nocompatible      " must be the first line
-filetype on
-filetype indent on
-filetype plugin on
+set nocompatible | filetype indent plugin on | syntax on      " must be the first line
 
 
 "" General options
 set bg=dark
-syntax on
 set number
 set whichwrap=h,l,<,> " which key let you go to previous/next line
 set wildmenu          " Make the command-line completion better
@@ -38,7 +34,7 @@ set ts=2
 set ai
 set autoread          " Automatically read a file that has changed on disk
 set cursorline        " Highlight cursor line (!slows rendering!)
-set backspace=start,indent " let backspace delete previous char
+set backspace=eol,start,indent " let backspace delete previous char
 
 nnoremap ' `
 nnoremap ` '
@@ -67,34 +63,45 @@ endif
 "  set shcf=-ic
 "endif
 let mapleader = ","
+let maplocalleader = ","
 
 let $ADDED = '~/.vim/added/'
 
 source ~/.vim/bepo.vim
 source ~/.vim/bepo-addons.vim
 
+fun! SetupVAM()
+  let c = get(g:, 'vim_addon_manager', {})
+  let g:vim_addon_manager = c
+  let c.plugin_root_dir = expand('$HOME', 1) . '/.vim/vim-addons'
+  " most used options you may want to use:
+  " let c.log_to_buf = 1
+  " let c.auto_install = 0
+  let &rtp.=(empty(&rtp)?'':',').c.plugin_root_dir.'/vim-addon-manager'
+  if !isdirectory(c.plugin_root_dir.'/vim-addon-manager/autoload')
+    execute '!git clone --depth=1 git://github.com/MarcWeber/vim-addon-manager '
+        \       shellescape(c.plugin_root_dir.'/vim-addon-manager', 1)
+  endif
+  call vam#ActivateAddons([], {'auto_install' : 0})
+endfun
+
+call SetupVAM()
+
 " """""""""""""""""""""""
 " Addons 
 " """""""""""""""""""""""
-fun! ActivateAddons()
-  set runtimepath+=~/.vim-plugins/vim-addon-manager
-  try
-    call vam#ActivateAddons(['The_NERD_tree',
-      \ 'repeat', 'surround', 'unimpaired', 'tabular',
-      \ 'behaghel-scala-vim-github', 'Rainbow_Parenthsis_Bundle',
-      \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist',
-      \ 'markdown', 'ensime', 'snipmate-snippets', 
-      \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
-      \ 'Command-T', "The_NERD_Commenter", "Solarized",
-      \ 'gitv', 'fugitive', 'git.zip'])
+VAMActivate The_NERD_tree Zenburn
+      \ repeat surround unimpaired Tabular
+      \ github:behaghel/vim-scala github:behaghel/Rainbow_Parenthsis_Bundle
+      \ camelcasemotion matchit.zip taglist
+      \ markdown@tpope ensime 
+      \ Command-T The_NERD_Commenter Solarized
+      \ gitv fugitive git.zip
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
-      "\ 'simplenote', 'lodgeit', 'Gist', 
+      "\ 'simplenote', 'lodgeit', 'Gist', snipmate-snippets,
+      "\ 'VikiDeplate', 'vikitasks', ZenCoding 
+      "\ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       "
-  catch /.*/
-    echoe v:exception
-  endtry
-endf
-call ActivateAddons()
 
 " fugitive
 " autodelete fugitive buffers when hidden
@@ -143,9 +150,6 @@ nmap <silent> <Leader>ta <Plug>ToggleAutoCloseMappings
 " """""""""""""""""""""""
 " general mapping
 " """""""""""""""""""""""
-" fix azerty for coding productivity
-noremap ; .
-noremap . ;
 "make Y consistent with C and D
 nnoremap Y y$
 "make <c-l> clear the highlight as well as redraw
@@ -180,7 +184,7 @@ if &term =~ "screen-256color"
 endif
 " My mac can't make Ctrl-] work out f the box :-(
 if has("macunix")
-  map  <C-]>
+  nnoremap  <C-]>
   map [5C :tabnext<CR>
   map [5D :tabprevious<CR>
   map ^[[1;9D :tabprevious<CR>
@@ -414,4 +418,4 @@ set statusline=[%n]%h%m%r%f\ \ %{fugitive#statusline()}%h%<%=%(pos=%l/%L:%c%V%)\
 " activate lazyredraw at the latest time, 
 " otherwise on startup it prevents the buffer to be rendered.
 set lazyredraw  " smoother looking plugins
-color solarized
+color zenburn

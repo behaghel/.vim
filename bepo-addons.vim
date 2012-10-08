@@ -46,3 +46,6 @@ let NERDTreeMapJumpPrevSibling='<C-S>'
 "let NERDTreeMapRefresh='j'
 "let NERDTreeMapRefreshRoot='J'
 
+" make something useful with our bépo key
+nnoremap à <C-]>
+
