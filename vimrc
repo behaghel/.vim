@@ -38,7 +38,7 @@ set ts=2
 set ai
 set autoread          " Automatically read a file that has changed on disk
 set cursorline        " Highlight cursor line (!slows rendering!)
-set backspace=start,indent " let backspace delete previous char
+set backspace=eol,start,indent " let backspace delete previous char
 
 nnoremap ' `
 nnoremap ` '
@@ -67,6 +67,7 @@ endif
 "  set shcf=-ic
 "endif
 let mapleader = ","
+let maplocalleader = ","
 
 let $ADDED = '~/.vim/added/'
 
@@ -80,10 +81,11 @@ fun! ActivateAddons()
   set runtimepath+=~/.vim-plugins/vim-addon-manager
   try
     call vam#ActivateAddons(['The_NERD_tree',
-      \ 'repeat', 'surround', 'unimpaired', 'tabular',
-      \ 'behaghel-scala-vim-github', 'Rainbow_Parenthsis_Bundle',
+      \ 'repeat', 'surround', 'unimpaired', 'Tabular',
+      \ 'github:behaghel/vim-scala', 'github:behaghel/Rainbow_Parenthsis_Bundle',
       \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist',
-      \ 'markdown', 'ensime', 'snipmate-snippets', 
+      \ 'VikiDeplate', 'vikitasks',
+      \ 'markdown@tpope', 'ensime', 'snipmate-snippets', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'gitv', 'fugitive', 'git.zip'])

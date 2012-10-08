@@ -2,3 +2,4 @@ tmp/
 tags/
 .netrwhist
 .VimballRecord
+cache/
