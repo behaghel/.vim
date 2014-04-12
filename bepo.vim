@@ -86,4 +86,7 @@ noremap « <
 noremap » >
 inoremap « <
 inoremap » >
-
+noremap < «
+noremap > »
+inoremap < «
+inoremap > »

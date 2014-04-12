@@ -38,7 +38,7 @@ set ts=2
 set ai
 set autoread          " Automatically read a file that has changed on disk
 set cursorline        " Highlight cursor line (!slows rendering!)
-set backspace=eol,start,indent " let backspace delete previous char
+set backspace=start,indent,eol " let backspace delete previous char
 
 nnoremap ' `
 nnoremap ` '
@@ -67,7 +67,7 @@ endif
 "  set shcf=-ic
 "endif
 let mapleader = ","
-let maplocalleader = ","
+let maplocalleader = "è"
 
 let $ADDED = '~/.vim/added/'
 
@@ -84,13 +84,13 @@ fun! ActivateAddons()
       \ 'repeat', 'surround', 'unimpaired', 'Tabular',
       \ 'github:behaghel/vim-scala', 'github:behaghel/Rainbow_Parenthsis_Bundle',
       \ 'camelcasemotion', 'ZenCoding', 'matchit.zip', 'taglist',
-      \ 'VikiDeplate', 'vikitasks',
       \ 'markdown@tpope', 'ensime', 'snipmate-snippets', 
       \ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       \ 'Command-T', "The_NERD_Commenter", "Solarized",
       \ 'gitv', 'fugitive', 'git.zip'])
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
       "\ 'simplenote', 'lodgeit', 'Gist', 
+      "\ 'VikiDeplate', 'vikitasks',
       "
   catch /.*/
     echoe v:exception
@@ -132,6 +132,16 @@ let tlist_use_right_window = 1
 "source ~/.vim-plugins/simplenote/cred
 " rainbow_parenthsis
 let g:btm_rainbow_color = 1
+" Vim-R-plugin
+" on mac don't default to applescript to discuss with R
+let g:vimrplugin_applescript = 0
+" use my own tmux.conf not yours, it's rubbish.
+let g:vimrplugin_notmuxconf = 1
+" do not start another tmux session, we are already in
+let g:vimrplugin_only_in_tmux = 1
+" Screen plugin should use tmux
+let g:ScreenImpl = 'Tmux'
+
 
 " addons shortcuts
 "map <C-p> :Lodgeit<CR> too dangerous at work...
@@ -185,6 +195,8 @@ if has("macunix")
   map  <C-]>
   map [5C :tabnext<CR>
   map [5D :tabprevious<CR>
+  map OC :tabnext<CR>
+  map OD :tabprevious<CR>
   map ^[[1;9D :tabprevious<CR>
   map ^[[1;9C :tabnext<CR>
 endif
