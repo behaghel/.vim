@@ -137,6 +137,16 @@ let tlist_use_right_window = 1
 "source ~/.vim-plugins/simplenote/cred
 " rainbow_parenthsis
 let g:btm_rainbow_color = 1
+" Vim-R-plugin
+" on mac don't default to applescript to discuss with R
+let g:vimrplugin_applescript = 0
+" use my own tmux.conf not yours, it's rubbish.
+let g:vimrplugin_notmuxconf = 1
+" do not start another tmux session, we are already in
+let g:vimrplugin_only_in_tmux = 1
+" Screen plugin should use tmux
+let g:ScreenImpl = 'Tmux'
+
 
 " addons shortcuts
 "map <C-p> :Lodgeit<CR> too dangerous at work...
@@ -187,6 +197,8 @@ if has("macunix")
   nnoremap  <C-]>
   map [5C :tabnext<CR>
   map [5D :tabprevious<CR>
+  map OC :tabnext<CR>
+  map OD :tabprevious<CR>
   map ^[[1;9D :tabprevious<CR>
   map ^[[1;9C :tabnext<CR>
 endif
