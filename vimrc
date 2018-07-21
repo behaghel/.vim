@@ -70,6 +70,14 @@ let $ADDED = '~/.vim/added/'
 source ~/.vim/bepo.vim
 source ~/.vim/bepo-addons.vim
 
+" """""""""""""""""""""""
+" Addons 
+" """""""""""""""""""""""
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo  ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 fun! SetupVAM()
   let c = get(g:, 'vim_addon_manager', {})
   let g:vim_addon_manager = c
@@ -85,23 +93,32 @@ fun! SetupVAM()
   call vam#ActivateAddons([], {'auto_install' : 0})
 endfun
 
-call SetupVAM()
+"call SetupVAM()
 
-" """""""""""""""""""""""
-" Addons 
-" """""""""""""""""""""""
-VAMActivate The_NERD_tree Zenburn
-      \ repeat surround unimpaired Tabular
-      \ github:behaghel/vim-scala github:behaghel/Rainbow_Parenthsis_Bundle
-      \ camelcasemotion matchit.zip taglist
-      \ markdown@tpope ensime 
-      \ Command-T The_NERD_Commenter Solarized
-      \ gitv fugitive git.zip
+"VAMActivate The_NERD_tree Zenburn monokai
+      "\ repeat surround unimpaired Tabular
+      "\ camelcasemotion matchit.zip taglist
+      "\ markdown@tpope ensime 
+      "\ Command-T The_NERD_Commenter Solarized
+      "\ gitv fugitive git.zip
    ""   \ 'codefellow', 'scalacommenter', 'AutoClose1849', 'pydoc910', 
       "\ 'simplenote', 'lodgeit', 'Gist', snipmate-snippets,
       "\ 'VikiDeplate', 'vikitasks', ZenCoding 
       "\ 'vim-addon-async','vim-addon-completion','vim-addon-json-encoding',
       "
+call plug#begin('~/.vim/plugged')
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-fugitive'
+Plug 'gregsexton/gitv', { 'on': ['Gitv']}
+Plug 'scrooloose/nerdcommenter'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'morhetz/gruvbox'
+call plug#end()
 
 " fugitive
 " autodelete fugitive buffers when hidden
@@ -430,4 +447,4 @@ set statusline=[%n]%h%m%r%f\ \ %{fugitive#statusline()}%h%<%=%(pos=%l/%L:%c%V%)\
 " activate lazyredraw at the latest time, 
 " otherwise on startup it prevents the buffer to be rendered.
 set lazyredraw  " smoother looking plugins
-color zenburn
+colorscheme gruvbox
